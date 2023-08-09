@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  api:
+    build: . 
+    container_name: "ticktock-api"
+    restart: always
+    networks:
+      custom_network:
+        ipv4_address: 172.16.0.2  # Customize the IP address as needed
+    ports:
+      - "8080:8080"
+
+networks:
+  custom_network:
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24  # Customize the IP range as needed
