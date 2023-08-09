@@ -1,0 +1,67 @@
+
+  swagger: '2.0'
+  info:
+    description: TickTock API is a webservice that its unique perpuse is to generate timestamps between two times with a certain period. 
+      It is alligned with time zone and supports DST (daylight saving time). It does not need any authorization to perform a question to system.  
+    title: TickTock API - Create and share your timestamps
+    version: 1.0.0
+    contact:
+      name: API Support
+      email: agavaletakis@hotmail.com
+  basePath: /api
+  schemes:
+    - http
+  consumes:
+    - application/json
+
+  paths:
+    '/ptlist':
+      parameters:
+        - $ref: '#/parameters/timeZone'
+        - $ref: '#/parameters/t1'
+        - $ref: '#/parameters/t2'
+        - $ref: '#/parameters/period'
+      get:
+        tags:
+        - timestamps
+        description: Return a list of timestamps
+        responses:
+          "200":
+            description: Return a list of timestamps
+            schema:
+              type: array
+              items:
+                type: string
+          "400":
+            description: Return the reason of failure
+            schema:
+              type: string
+         
+    
+
+
+  parameters:
+    timeZone:
+      name: tz
+      description: The timezone of the timestamps
+      in: query
+      required: true
+      type: string
+    t1:
+      name: t1
+      description: Start time
+      in: query
+      required: true
+      type: string
+    t2:
+      name: t2
+      description: End time
+      in: query
+      required: true
+      type: string
+    period:
+      name: period
+      description: The supported periods are 1h, 1d, 1mo, 1y
+      in: query
+      required: true
+      type: string
