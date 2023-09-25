@@ -111,17 +111,6 @@ func calculateTimestampsByMonth(loc time.Location, t1, t2 time.Time) ([]string, 
 	//reference Summer time. (DST period)
 	refSummerTime := time.Date(2023, 6, 1, 0, 0, 0, 0, &loc)
 	_, refOffset := refSummerTime.Zone()
-	_, tmp := t1.In(&loc).Zone()
-	dif := refOffset - tmp
-
-	//find last day of the month
-	firstOfMonth := time.Date(t1.Year(), t1.Month(), 1, initTime.Hour(), initTime.Minute(), initTime.Second(), 0, time.UTC)
-	t1 = firstOfMonth.AddDate(0, 1, -1)
-	//fix hour if needed
-	dts := t1.Add(time.Duration(dif) * time.Second)
-	tsmps = append(tsmps, dts.Format(layout))
-	t1 = t1.AddDate(0, 0, 1) //move to next month
-
 	for {
 
 		//find last day of the month
@@ -132,7 +121,7 @@ func calculateTimestampsByMonth(loc time.Location, t1, t2 time.Time) ([]string, 
 		dif := refOffset - tmp
 		//fix hour if needed
 
-		dts = t1.Add(time.Duration(dif) * time.Second)
+		dts := t1.Add(time.Duration(dif) * time.Second)
 		////move to next month
 		t1 = t1.AddDate(0, 0, 1)
 		if t1.After(t2) {
@@ -146,13 +135,13 @@ func calculateTimestampsByMonth(loc time.Location, t1, t2 time.Time) ([]string, 
 //calculateTimestampsByYear calculates the timestamps for a period of a year.
 func calculateTimestampsByYear(loc time.Location, t1, t2 time.Time) ([]string, error) {
 	var tsmps []string
-	initTime := t1
+
 	refSummerTime := time.Date(2023, 6, 1, 0, 0, 0, 0, &loc)
 	_, refOffset := refSummerTime.Zone()
 	_, tmp := t1.In(&loc).Zone()
 	dif := refOffset - tmp
 
-	t1 = time.Date(t1.Year(), 12, 31, initTime.Hour(), initTime.Minute(), initTime.Second(), 0, time.UTC)
+	t1 = time.Date(t1.Year(), 12, 31, t1.Hour(), t1.Minute(), t1.Second(), 0, time.UTC)
 	//fix hour if needed
 	t1 = t1.Add(time.Duration(dif) * time.Second)
 	tsmps = append(tsmps, t1.Format(layout))
